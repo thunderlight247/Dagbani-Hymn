@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "769902801759",
+    "project_id": "dagbani-hymn-app",
+    "storage_bucket": "dagbani-hymn-app.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:769902801759:android:c3bb10032fa071bcae7cea",
+        "android_client_info": {
+          "package_name": "com.example.hymn"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD9Ey08bAOWAlozoeLxF6Qrhv2-4VMxcJI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
