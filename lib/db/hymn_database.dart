@@ -1,15 +1,21 @@
 import 'dart:convert';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
 
 class HymnDatabase {
+  static bool get supportsSqlite => !kIsWeb;
+
   static final HymnDatabase instance = HymnDatabase._init();
   static Database? _database;
 
   HymnDatabase._init();
 
   Future<Database> get database async {
+    if (kIsWeb) {
+      throw UnsupportedError('SQLite is not supported on web builds.');
+    }
     if (_database != null) return _database!;
     final dbPath = await getDatabasesPath();
     final path = join(dbPath, 'dagbani_hymns.db');
@@ -56,6 +62,7 @@ class HymnDatabase {
 
   // ADDED: Updates the isFavorite status in the database
   Future<void> toggleFavoriteStatus(int hymnId, bool isFavorite) async {
+    if (kIsWeb) return;
     final db = await database;
     await db.update(
       'hymns',
@@ -68,6 +75,7 @@ class HymnDatabase {
 
   // ADDED: Fetches all favorited hymns from the database (currently unused, but helpful)
   Future<List<Map<String, dynamic>>> getFavoriteHymnsData() async {
+    if (kIsWeb) return [];
     final db = await database;
     return await db.query(
       'hymns',
@@ -76,14 +84,16 @@ class HymnDatabase {
       orderBy: 'number ASC',
     );
   }
-  
+
   Future<List<Map<String, dynamic>>> getAllHymns() async {
+    if (kIsWeb) return [];
     final db = await database;
     // Query now returns the isFavorite status too
-    return await db.query('hymns'); 
+    return await db.query('hymns');
   }
 
   Future close() async {
+    if (kIsWeb) return;
     final db = await database;
     _database = null;
     await db.close();

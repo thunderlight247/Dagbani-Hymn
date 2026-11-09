@@ -9,10 +9,11 @@ import '../widgets/search_bar.dart' as custom;
 
 class TOCScreen extends StatefulWidget {
   final void Function(Hymn)? onDirectSearch;
-  final void Function(Hymn) onToggleFavorite; // CRITICAL: Added required function
+  final void Function(Hymn)
+  onToggleFavorite; // CRITICAL: Added required function
 
   const TOCScreen({
-    super.key, 
+    super.key,
     this.onDirectSearch,
     required this.onToggleFavorite, // CRITICAL: Added to constructor
   });
@@ -23,7 +24,6 @@ class TOCScreen extends StatefulWidget {
 
 class _TOCScreenState extends State<TOCScreen> {
   // RESTORED: State variables
-  String _searchQuery = '';
   List<Hymn> _hymns = [];
   List<Hymn> _filteredHymns = [];
   String? _searchError;
@@ -47,7 +47,6 @@ class _TOCScreenState extends State<TOCScreen> {
   void _handleSearch(String value) {
     final query = value.toLowerCase().trim();
     setState(() {
-      _searchQuery = value;
       _searchError = null;
 
       // Handle "number, page" quick search
@@ -62,16 +61,16 @@ class _TOCScreenState extends State<TOCScreen> {
             (hymn) =>
                 hymn.number.toLowerCase() == number &&
                 hymn.page.toLowerCase() == page,
-            orElse: () => Hymn(id: 0, number: '', title: '', page: '', content: []),
+            orElse: () =>
+                Hymn(id: 0, number: '', title: '', page: '', content: []),
           );
 
           if (match.id != 0 && widget.onDirectSearch != null && mounted) {
             WidgetsBinding.instance.addPostFrameCallback((_) {
               widget.onDirectSearch!(match);
-              _searchQuery = ''; 
-              _filteredHymns = List.from(_hymns); 
+              _filteredHymns = List.from(_hymns);
             });
-            return; 
+            return;
           } else {
             _searchError = 'No hymn or chorus found for "$number, $page"';
           }
@@ -123,21 +122,19 @@ class _TOCScreenState extends State<TOCScreen> {
     final groupedHymns = _groupByCategory(_filteredHymns);
 
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Table of Contents'),
-        centerTitle: true,
-      ),
+      appBar: AppBar(title: const Text('Table of Contents'), centerTitle: true),
       body: Column(
         children: [
           custom.SearchBar(
             onChanged: _handleSearch,
-            hintText: 'Search title, number, page, or category (e.g., 1, 1 or 1, 48)',
+            hintText:
+                'Search title, number, page, or category (e.g., 1, 1 or 1, 48)',
             errorText: _searchError,
           ),
           Expanded(
             child: ListView.separated(
               itemCount: groupedHymns.length,
-              separatorBuilder: (_, __) => const Divider(height: 32),
+              separatorBuilder: (_, _) => const Divider(height: 32),
               itemBuilder: (context, index) {
                 final category = groupedHymns.keys.elementAt(index);
                 final hymns = groupedHymns[category]!;
@@ -150,7 +147,8 @@ class _TOCScreenState extends State<TOCScreen> {
                       MaterialPageRoute(
                         builder: (_) => HymnDetail(
                           hymn: hymn,
-                          onToggleFavorite: widget.onToggleFavorite, // THE FIXED CALL
+                          onToggleFavorite:
+                              widget.onToggleFavorite, // THE FIXED CALL
                         ),
                       ),
                     );

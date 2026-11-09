@@ -1,11 +1,11 @@
 {
-    "name": "hymn",
-    "short_name": "hymn",
+    "name": "PCG Dagbani Hymn",
+    "short_name": "PCG Dagbani Hymn",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",
     "theme_color": "#0175C2",
-    "description": "A new Flutter project.",
+    "description": "PCG Dagbani Hymn app.",
     "orientation": "portrait-primary",
     "prefer_related_applications": false,
     "icons": [

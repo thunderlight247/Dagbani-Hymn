@@ -1,74 +1,106 @@
 import 'dart:io';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 import 'package:logger/logger.dart';
-import 'package:provider/provider.dart'; 
-// import 'package:firebase_core/firebase_core.dart'; // COMMENTED OUT
-// import 'firebase_options.dart'; // COMMENTED OUT
+import 'package:provider/provider.dart';
 import './splash/splash_screen.dart';
 import './models/settings_model.dart';
 
 final logger = Logger();
 
-void main() { // <--- CHANGED BACK TO SYNCHRONOUS
+void main() {
   WidgetsFlutterBinding.ensureInitialized();
 
-  // REMOVED FIREBASE INITIALIZATION BLOCK
-  
-  // Initialize sqflite_ffi for desktop platforms
-  if (Platform.isWindows || Platform.isLinux || Platform.isMacOS) {
+  // Initialize sqflite_ffi only for native desktop platforms.
+  if (!kIsWeb && (Platform.isWindows || Platform.isLinux || Platform.isMacOS)) {
     logger.i('Initializing sqflite_ffi for desktop...');
     sqfliteFfiInit();
-    databaseFactory = databaseFactoryFfi; 
+    databaseFactory = databaseFactoryFfi;
     logger.i('sqflite_ffi initialized. databaseFactory: $databaseFactory');
   } else {
-    logger.i('Using default sqflite for mobile. databaseFactory: $databaseFactory');
+    logger.i(
+      'Using default sqflite for non-desktop or web runtime. databaseFactory: $databaseFactory',
+    );
   }
 
-  // WRAP APP IN PROVIDER
-  runApp(
-    ChangeNotifierProvider(
-      create: (context) => SettingsModel(),
-      child: const HymnBookApp(),
-    ),
-  );
+  runApp(const HymnBookApp());
 }
 
 class HymnBookApp extends StatelessWidget {
-  const HymnBookApp({super.key});
+  final SettingsModel? settingsModel;
+
+  const HymnBookApp({super.key, this.settingsModel});
+
+  static const Color pcgBlue = Color(0xFF1565C0);
+  static const Color pcgDarkBlue = Color(0xFF0D47A1);
+  static const Color pcgTeal = Color(0xFF00897B);
 
   @override
   Widget build(BuildContext context) {
-    // READ THE SETTINGS STATE
-    final settings = Provider.of<SettingsModel>(context);
-    
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      title: 'Dagbani Hymn Book',
-      
-      // APPLY THEME MODE: Locked to Light
-      themeMode: ThemeMode.light, 
-      
-      theme: ThemeData( // Light Theme Setup
-        primarySwatch: Colors.blue,
-        brightness: Brightness.light,
-        visualDensity: VisualDensity.adaptivePlatformDensity,
-        appBarTheme: const AppBarTheme(
-          elevation: 0, 
-          surfaceTintColor: Colors.transparent,
-        ),
-        // Ensure card colors are explicitly white for contrast
-        cardColor: Colors.white, 
-        scaffoldBackgroundColor: Colors.white,
-        
-        // This is necessary for light mode color consistency:
-        colorScheme: const ColorScheme.light(
-          primary: Colors.blue,
-          secondary: Colors.teal,
-        ),
+    return ChangeNotifierProvider<SettingsModel>(
+      create: (_) => settingsModel ?? SettingsModel(),
+      child: Consumer<SettingsModel>(
+        builder: (context, settings, child) {
+          return MaterialApp(
+            debugShowCheckedModeBanner: false,
+            title: 'PCG Dagbani Hymn',
+            themeMode: settings.themeMode,
+
+            // Modern Light Theme with Presbyterian Church of Ghana colors
+            theme: ThemeData(
+              useMaterial3: true,
+              colorScheme: ColorScheme.fromSeed(
+                seedColor: pcgBlue,
+                primary: pcgBlue,
+                secondary: pcgTeal,
+                brightness: Brightness.light,
+                surface: Colors.white,
+              ),
+              scaffoldBackgroundColor: const Color(0xFFF8F9FA),
+              cardColor: Colors.white,
+              appBarTheme: const AppBarTheme(
+                backgroundColor: pcgBlue,
+                foregroundColor: Colors.white,
+                elevation: 0,
+                centerTitle: true,
+                iconTheme: IconThemeData(color: Colors.white),
+              ),
+              drawerTheme: const DrawerThemeData(
+                backgroundColor: Colors.white,
+              ),
+              dividerColor: const Color(0xFFEEEEEE),
+            ),
+
+            // Modern Dark Theme
+            darkTheme: ThemeData(
+              useMaterial3: true,
+              colorScheme: ColorScheme.fromSeed(
+                seedColor: pcgBlue,
+                primary: const Color(0xFF64B5F6),
+                secondary: const Color(0xFF4DB6AC),
+                brightness: Brightness.dark,
+                surface: const Color(0xFF1E222B),
+              ),
+              scaffoldBackgroundColor: const Color(0xFF121418),
+              cardColor: const Color(0xFF1E222B),
+              appBarTheme: const AppBarTheme(
+                backgroundColor: Color(0xFF1A1F29),
+                foregroundColor: Colors.white,
+                elevation: 0,
+                centerTitle: true,
+                iconTheme: IconThemeData(color: Colors.white),
+              ),
+              drawerTheme: const DrawerThemeData(
+                backgroundColor: Color(0xFF1A1F29),
+              ),
+              dividerColor: const Color(0xFF2C323F),
+            ),
+
+            home: const SplashScreen(),
+          );
+        },
       ),
-      
-      home: const SplashScreen(),
     );
   }
 }

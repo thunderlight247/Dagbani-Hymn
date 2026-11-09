@@ -6,7 +6,8 @@ class Hymn {
   final List<String> content;
   final String? translation;
   final String? category;
-  final bool isFavorite; // <--- ADDED FIELD
+  final String? reference;
+  final bool isFavorite;
 
   Hymn({
     required this.id,
@@ -16,10 +17,10 @@ class Hymn {
     required this.content,
     this.translation,
     this.category,
-    this.isFavorite = false, // <--- INITIALIZED FIELD
+    this.reference,
+    this.isFavorite = false,
   });
 
-  // --- 1. ADD copyWith METHOD (CRITICAL FOR STATE MANAGEMENT) ---
   Hymn copyWith({
     int? id,
     String? number,
@@ -28,6 +29,7 @@ class Hymn {
     List<String>? content,
     String? translation,
     String? category,
+    String? reference,
     bool? isFavorite,
   }) {
     return Hymn(
@@ -38,11 +40,11 @@ class Hymn {
       content: content ?? this.content,
       translation: translation ?? this.translation,
       category: category ?? this.category,
+      reference: reference ?? this.reference,
       isFavorite: isFavorite ?? this.isFavorite,
     );
   }
 
-  // --- 2. UPDATED toMap (For future persistence, e.g., database/json saving) ---
   Map<String, dynamic> toMap() => {
         'id': id,
         'number': number,
@@ -51,25 +53,25 @@ class Hymn {
         'content': content,
         'translation': translation,
         'category': category,
-        'isFavorite': isFavorite ? 1 : 0, // Store as 1 or 0 in map/database
+        'reference': reference,
+        'isFavorite': isFavorite ? 1 : 0,
       };
 
-  // --- 3. UPDATED fromMap (To read favorite status from data source) ---
   factory Hymn.fromMap(Map<String, dynamic> map) {
-    // Helper to safely parse isFavorite
     final bool parsedIsFavorite = map['isFavorite'] == 1 || map['isFavorite'] == true;
 
     return Hymn(
-        id: map['id'] is int ? map['id'] : int.tryParse(map['id']?.toString() ?? '0') ?? 0,
-        number: map['number']?.toString() ?? '',
-        title: map['title']?.toString() ?? '',
-        page: (map['pages'] is List ? map['pages']?.first : map['page'])?.toString() ?? '',
-        content: map['content'] is List
-            ? List<String>.from(map['content'] ?? [])
-            : (map['content']?.toString() ?? '').split('\n\n'),
-        translation: map['translation']?.toString() ?? map['subtitle']?.toString(),
-        category: map['category']?.toString(),
-        isFavorite: parsedIsFavorite, // <--- ADDED INITIALIZATION
+      id: map['id'] is int ? map['id'] : int.tryParse(map['id']?.toString() ?? '0') ?? 0,
+      number: map['number']?.toString() ?? '',
+      title: map['title']?.toString() ?? '',
+      page: (map['pages'] is List ? map['pages']?.first : map['page'])?.toString() ?? '',
+      content: map['content'] is List
+          ? List<String>.from(map['content'] ?? [])
+          : (map['content']?.toString() ?? '').split('\n\n'),
+      translation: map['translation']?.toString() ?? map['subtitle']?.toString(),
+      category: map['category']?.toString(),
+      reference: map['reference']?.toString(),
+      isFavorite: parsedIsFavorite,
     );
   }
 }

@@ -1,5 +1,5 @@
 name: hymn
-description: "A new Flutter project."
+description: "PCG Dagbani Hymn app."
 publish_to: 'none'
 
 version: 1.0.0+1
@@ -18,9 +18,12 @@ dependencies:
   google_fonts: ^6.3.2
   provider: ^6.1.5+1
   shared_preferences: ^2.5.3
-  image_picker: ^1.2.1
+  image_picker: ^0.8.7+4
   path_provider: ^2.1.5
   file_picker: ^10.3.3
+  audioplayers: ^6.8.1
+  wakelock_plus: ^1.5.2
+  share_plus: ^12.0.2
 
 dev_dependencies:
   flutter_test:
@@ -37,13 +40,13 @@ flutter:
     - assets/data/content.json
     - assets/images/cover.png
 
-  fonts:
-    - family: DagbaniFont
-      fonts:
-        - asset: assets/fonts/DagbaniFont-Regular.ttf
+#  fonts:
+#   - family: DagbaniFont
+#      fonts:
+#       - asset: assets/fonts/DagbaniFont-Regular.ttf
 
 flutter_launcher_icons:
   android: true
   ios: true
-  image_path: "assets/images/icon.png"
+  image_path: "assets/images/cover.png"
   remove_alpha_ios: true

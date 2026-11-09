@@ -1,4 +1,4 @@
-/*import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 
 class ActivityScreen extends StatelessWidget {
   const ActivityScreen({super.key});
@@ -6,9 +6,7 @@ class ActivityScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Congregation Activity'),
-      ),
+      appBar: AppBar(title: const Text('Congregation Activity')),
       body: const Center(
         child: Text(
           'Timeline of congregation events and announcements will be displayed here.',
@@ -18,4 +16,4 @@ class ActivityScreen extends StatelessWidget {
       ),
     );
   }
-}*/
+}
