@@ -14,6 +14,7 @@ import '../screens/profile_screen.dart';
 import '../screens/upload_screen.dart';
 import '../screens/history_screen.dart';
 import '../screens/about_screen.dart';
+import '../screens/churches_screen.dart';
 import '../widgets/profile_check_utility.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -468,6 +469,20 @@ class _HomeScreenState extends State<HomeScreen> {
                       Navigator.push(
                         context,
                         MaterialPageRoute(builder: (_) => const HistoryScreen()),
+                      );
+                    },
+                  ),
+
+
+                  // 4b. Churches Directory
+                  ListTile(
+                    leading: const Icon(Icons.location_city_rounded),
+                    title: const Text('Churches', style: TextStyle(fontWeight: FontWeight.w600)),
+                    onTap: () {
+                      Navigator.pop(context);
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (_) => const ChurchesScreen()),
                       );
                     },
                   ),
